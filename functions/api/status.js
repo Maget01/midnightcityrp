@@ -3,7 +3,7 @@ export async function onRequest() {
   const invite = 'brA5VHSntq';
   const headers = { 'content-type': 'application/json', 'access-control-allow-origin': '*' };
   const started = Date.now();
-  let status = { online:false, players:0, maxPlayers:128, ping:null, discord:null };
+  let status = { online:false, players:0, maxPlayers:10, ping:null, discord:null };
   try {
     const [playersRes, dynamicRes] = await Promise.allSettled([
       fetch(`http://${ip}/players.json`, { cf: { cacheTtl: 5 } }),
@@ -16,7 +16,7 @@ export async function onRequest() {
     }
     if (dynamicRes.status === 'fulfilled' && dynamicRes.value.ok) {
       const dyn = await dynamicRes.value.json();
-      status.maxPlayers = Number(dyn.sv_maxclients || dyn.clients_max || 128);
+      status.maxPlayers = Number(dyn.sv_maxclients || dyn.clients_max || 10);
       status.players = Number(dyn.clients ?? status.players);
       status.online = true;
     }
